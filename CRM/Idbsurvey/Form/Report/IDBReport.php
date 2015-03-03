@@ -1,9 +1,24 @@
 <?php
 
 class CRM_Idbsurvey_Form_Report_IDBReport extends CRM_Report_Form {
-
-  function __construct() {
-    parent::__construct();
+    function __construct() {
+    $this->_columns = array(
+        'civicrm_contribution' =>
+        array(
+          'dao' => 'CRM_Contribute_DAO_Contribution',
+          'filters' =>
+          array(
+          'financial_type_id'   =>
+            array(
+                'title' => ts('Choose which financial types count as donations'),
+                'operatorType' => CRM_Report_Form::OP_MULTISELECT_SEPARATOR,
+                'options' => CRM_Contribute_PseudoConstant::financialType(),
+                'type' => CRM_Utils_Type::T_INT,
+            ),
+         ),
+        ),
+        );
+         parent::__construct();
   }
 
   function preProcess() {
@@ -13,7 +28,6 @@ class CRM_Idbsurvey_Form_Report_IDBReport extends CRM_Report_Form {
 
 
   function postProcess() {
-    // TODO: contribution status id for "complete" (probably 1, but not necessarily)
 
     // Basic queries to be built upon
     $select = "SELECT COUNT(contribution.total_amount) as total_amount_count,
@@ -24,36 +38,38 @@ class CRM_Idbsurvey_Form_Report_IDBReport extends CRM_Report_Form {
                 LEFT JOIN civicrm_financial_type ft ON contribution.financial_type_id = ft.id";
     $where = " WHERE ( contribution.receive_date >= 20140101000000 )
                  AND ( contribution.receive_date < 20150101000000 )
-                 AND ( contribution.contribution_status_id IN (1) )
+                 AND ( contribution.contribution_status_id IN (
+                      SELECT value FROM civicrm_option_value WHERE name = 'Completed' AND option_group_id = (
+                         SELECT id FROM civicrm_option_group WHERE name = 'contribution_status' ) ) )
                  AND cc.is_deleted = 0";
 
     //1. Total income/revenue for 2014
-
     $sql = $select . $from . $where;
     $dao = CRM_Core_DAO::executeQuery($sql);
     if ($dao->fetch()) {
-      $this->assign("answer1", $dao->total_amount_sum);
+      if($dao->total_amount_sum == ""){
+        $dao->total_amount_sum = 0;
+      }
+      $this->assign("answer1", CRM_Utils_Money::format($dao->total_amount_sum));
     }
-    //TODO: format as currency - there's a helper function
-
     //3. Total raised by individuals  for 2014
 
     // for the purposes of this, households are individuals
-    $where1 = $where." AND cc.contact_type in ('Individual', 'Household') ";
+    $where1 = $where." AND ( cc.contact_type in ('Individual', 'Household') ) ";
     $sql = $select . $from . $where1;
     $dao = CRM_Core_DAO::executeQuery($sql);
     if ($dao->fetch()) {
-      $this->assign("answer3", $dao->total_amount_sum);
+      if($dao->total_amount_sum == ""){
+        $dao->total_amount_sum = 0;
+      }
+      $this->assign("answer3", CRM_Utils_Money::format($dao->total_amount_sum));
     }
 
     //4. Total donations by individuals
 
-    // TODO: using "donation" isn't reliable.  You might include the totals by each type.
-    //       Also, a contribution's constituent line items might have different financial types.
-    //       I'd suggest giving all the financial types with each total and letting someone add
-    //       them with a calculator.
+    $types = implode(", ", $this->_submitValues['financial_type_id_value']);
     $select1 = $select . ", COUNT(DISTINCT contribution.contact_id) as total_contacts  ";
-    $where2 = $where1 . " AND contribution.financial_type_id = (SELECT id FROM civicrm_financial_type WHERE name = 'Donation')";
+    $where2 = $where1 . " AND contribution.financial_type_id IN ({$types})";
     $sql = $select1 . $from . $where2;
     $dao = CRM_Core_DAO::executeQuery($sql);
     if ($dao->fetch()) {
@@ -64,11 +80,14 @@ class CRM_Idbsurvey_Form_Report_IDBReport extends CRM_Report_Form {
     //6. Number of people that gave online
 
     //Where contact_type = Inidivudal and contribution came through a contribution page
-    $where3 = $where2 ." AND contribution.contribution_page_id is not null'  ";
-    $sql = $select1 . $from . $where3;
+    $where3 = $where1 ." AND contribution.contribution_page_id IS NOT NULL  ";
+    $sql = $select1 . $from . $where2;
     $dao = CRM_Core_DAO::executeQuery($sql);
     if ($dao->fetch()) {
-      $this->assign("answer5", $dao->total_amount_sum);
+      if($dao->total_amount_sum == ""){
+        $dao->total_amount_sum = 0;
+      }
+      $this->assign("answer5", CRM_Utils_Money::format($dao->total_amount_sum));
 
       // Where contact_type = Individual  Count(unique contact ids)
       // This may count someone who gives as an individual and then as a household
@@ -84,7 +103,10 @@ class CRM_Idbsurvey_Form_Report_IDBReport extends CRM_Report_Form {
     $sql = $select1 . $from . $whereRec;
     $dao = CRM_Core_DAO::executeQuery($sql);
     if ($dao->fetch()) {
-      $this->assign("answer7", $dao->total_amount_sum);
+      if($dao->total_amount_sum == ""){
+        $dao->total_amount_sum = 0;
+      }
+      $this->assign("answer7", CRM_Utils_Money::format($dao->total_amount_sum));
       $this->assign("answer8", $dao->total_contacts);
     }
 
@@ -98,7 +120,10 @@ class CRM_Idbsurvey_Form_Report_IDBReport extends CRM_Report_Form {
     $sql = $select1 . $from . $where4;
     $dao = CRM_Core_DAO::executeQuery($sql);
      if ($dao->fetch()) {
-      $this->assign("answer9", $dao->total_amount_sum);
+       if($dao->total_amount_sum == ""){
+         $dao->total_amount_sum = 0;
+       }
+      $this->assign("answer9", CRM_Utils_Money::format($dao->total_amount_sum));
       $this->assign("answer10", $dao->total_contacts);
     }
 
@@ -126,26 +151,34 @@ class CRM_Idbsurvey_Form_Report_IDBReport extends CRM_Report_Form {
     $sql = $select . $from . $where2013;
     $dao = CRM_Core_DAO::executeQuery($sql);
     if ($dao->fetch()) {
-      $this->assign("answer13", $dao->total_amount_sum);
+      if($dao->total_amount_sum == ""){
+        $dao->total_amount_sum = 0;
+      }
+      $this->assign("answer13", CRM_Utils_Money::format($dao->total_amount_sum));
     }
 
     //14.  What was your organization's total income from individual donors in 2013?
 
-    // TODO: Use the same method as #1
-    $where2013_1 = $where2013 . "  AND cc.contact_type = 'Individual' AND contribution.financial_type_id = (SELECT id FROM civicrm_financial_type WHERE name = 'Donation') ";
+    $where2013_1 = $where2013 . "  AND ( cc.contact_type in ('Individual', 'Household') ) ";
     $sql = $select.$from.$where2013_1;
     $dao = CRM_Core_DAO::executeQuery($sql);
     if ($dao->fetch()) {
-     $this->assign("answer14", $dao->total_amount_sum);
+      if($dao->total_amount_sum == ""){
+        $dao->total_amount_sum = 0;
+      }
+     $this->assign("answer14", CRM_Utils_Money::format($dao->total_amount_sum));
     }
 
     //15.  What was your organization's total income from online donations in 2013?
 
-    $where2013_2 = $where2013_1 . " AND contribution.contribution_page_id is not null";
+    $where2013_2 = $where2013_1 . " AND contribution.contribution_page_id IS NOT NULL";
     $sql = $select . $from . $where2013_2;
     $dao = CRM_Core_DAO::executeQuery($sql);
     if ($dao->fetch()) {
-      $this->assign("answer15", $dao->total_amount_sum);
+      if($dao->total_amount_sum == ""){
+        $dao->total_amount_sum = 0;
+      }
+      $this->assign("answer15", CRM_Utils_Money::format($dao->total_amount_sum));
     }
   }
 }
