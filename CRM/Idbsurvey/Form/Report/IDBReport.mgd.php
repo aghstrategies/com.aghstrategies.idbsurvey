@@ -4,15 +4,15 @@
 // database as appropriate. For more details, see "hook_civicrm_managed" at:
 // http://wiki.civicrm.org/confluence/display/CRMDOC42/Hook+Reference
 return array (
-  0 => 
+  0 =>
   array (
     'name' => 'CRM_Idbsurvey_Form_Report_IDBReport',
     'entity' => 'ReportTemplate',
-    'params' => 
+    'params' =>
     array (
       'version' => 3,
-      'label' => 'IDBReport',
-      'description' => 'IDBReport (com.aghstrategies.idbsurvey)',
+      'label' => 'Individual Donor Benchmark Survey Report ',
+      'description' => 'Individual Donor Benchmark Survey Report  (com.aghstrategies.idbsurvey)',
       'class_name' => 'CRM_Idbsurvey_Form_Report_IDBReport',
       'report_url' => 'com.aghstrategies.idbsurvey/idbreport',
       'component' => 'CiviContribute',

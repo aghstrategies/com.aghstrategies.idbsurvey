@@ -28,6 +28,9 @@ function idbsurvey_civicrm_xmlMenu(&$files) {
  * @link http://wiki.civicrm.org/confluence/display/CRMDOC/hook_civicrm_install
  */
 function idbsurvey_civicrm_install() {
+  $message = ts('Congratulations!  You have installed the extension successfully.');
+  $message .= ' ' . CRM_Utils_System::href('Continue to generate a report.', 'civicrm/report/com.aghstrategies.idbsurvey/idbreport', 'reset=1');
+  CRM_Core_Session::setStatus($message, ts('Continue to Report'), 'success');
   return _idbsurvey_civix_civicrm_install();
 }
 
@@ -46,6 +49,7 @@ function idbsurvey_civicrm_uninstall() {
  * @link http://wiki.civicrm.org/confluence/display/CRMDOC/hook_civicrm_enable
  */
 function idbsurvey_civicrm_enable() {
+
   return _idbsurvey_civix_civicrm_enable();
 }
 

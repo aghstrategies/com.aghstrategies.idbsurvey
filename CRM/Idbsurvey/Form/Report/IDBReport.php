@@ -1,7 +1,7 @@
 <?php
 
 class CRM_Idbsurvey_Form_Report_IDBReport extends CRM_Report_Form {
-    function __construct() {
+  function __construct() {
     $this->_columns = array(
         'civicrm_contribution' =>
         array(
@@ -15,20 +15,19 @@ class CRM_Idbsurvey_Form_Report_IDBReport extends CRM_Report_Form {
                 'options' => CRM_Contribute_PseudoConstant::financialType(),
                 'type' => CRM_Utils_Type::T_INT,
             ),
-         ),
+          ),
         ),
-        );
-         parent::__construct();
+      );
+    parent::__construct();
   }
 
   function preProcess() {
-    $this->assign('reportTitle', ts('IDB Report'));
+    $this->assign('reportTitle', ts('Individual Donor Benchmark Survey Report'));
     parent::preProcess();
   }
 
 
   function postProcess() {
-
     // Basic queries to be built upon
     $select = "SELECT COUNT(contribution.total_amount) as total_amount_count,
                 SUM(contribution.total_amount) as total_amount_sum,
@@ -66,10 +65,17 @@ class CRM_Idbsurvey_Form_Report_IDBReport extends CRM_Report_Form {
     }
 
     //4. Total donations by individuals
-
-    $types = implode(", ", $this->_submitValues['financial_type_id_value']);
+    $types = "";
+    if (array_key_exists('financial_type_id_value',$this->_submitValues)) {
+        $types = implode(", ", $this->_submitValues['financial_type_id_value']);
+    }
+    if ($types == "") {
+      $types_sentence = "IS NOT NULL";
+    } else {
+      $types_sentence = "IN ({$types})";
+    }
     $select1 = $select . ", COUNT(DISTINCT contribution.contact_id) as total_contacts  ";
-    $where2 = $where1 . " AND contribution.financial_type_id IN ({$types})";
+    $where2 = $where1 . " AND contribution.financial_type_id {$types_sentence}";
     $sql = $select1 . $from . $where2;
     $dao = CRM_Core_DAO::executeQuery($sql);
     if ($dao->fetch()) {
@@ -180,5 +186,7 @@ class CRM_Idbsurvey_Form_Report_IDBReport extends CRM_Report_Form {
       }
       $this->assign("answer15", CRM_Utils_Money::format($dao->total_amount_sum));
     }
+  //  CRM_Report_Form_Instance::postProcess($this, FALSE);
   }
+
 }

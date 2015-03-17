@@ -1,4 +1,4 @@
-{* Use the default layout *}
+
 {include file="CRM/Report/Form.tpl"}
 <table class="report-layout display">
   <thead>
@@ -29,7 +29,7 @@
       <td>{$answer6}</td>
     </tr>
     <tr class="even-row  crm-report">
-      <td>7. How muuch from recurring donations in 2014?</td>
+      <td>7. How much from recurring donations in 2014?</td>
       <td>{$answer7}</td>
     </tr>
     <tr class="odd-row  crm-report">
@@ -61,3 +61,10 @@
     </tr>
   </tbody>
 </table>
+{literal}
+<script type="text/javascript">
+  cj(".crm-report_setting-accordion").hide();
+  cj(".messages").hide();
+  cj("#_qf_IDBReport_submit").val("Display Answers to the Survey");
+</script>
+{/literal}
