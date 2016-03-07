@@ -9,7 +9,7 @@ class CRM_Idbsurvey_Form_Report_IDBReport extends CRM_Report_Form {
         'dao' => 'CRM_Contribute_DAO_Contribution',
         'filters' => array(
           'financial_type_id' => array(
-            'title' => tsLocal('Choose which financial types count as donations'),
+            'title' => self::tsLocal('Choose which financial types count as donations'),
             'operatorType' => CRM_Report_Form::OP_MULTISELECT_SEPARATOR,
             'options' => CRM_Contribute_PseudoConstant::financialType(),
             'type' => CRM_Utils_Type::T_INT,
@@ -21,7 +21,7 @@ class CRM_Idbsurvey_Form_Report_IDBReport extends CRM_Report_Form {
   }
 
   public function preProcess() {
-    $this->assign('reportTitle', tsLocal('Individual Donor Benchmark Survey Report'));
+    $this->assign('reportTitle', self::tsLocal('Individual Donor Benchmark Survey Report'));
     parent::preProcess();
   }
 
@@ -82,17 +82,17 @@ class CRM_Idbsurvey_Form_Report_IDBReport extends CRM_Report_Form {
     /* Specific questions */
 
     // 1. Total income/revenue for 2015
-    $questions[1] = tsLocal("What was your organization's total income/revenue in 2015?");
+    $questions[1] = self::tsLocal("What was your organization's total income/revenue in 2015?");
     $this->runItemQuery($select . $from . $where, 1);
 
     // 3. Total raised by individuals for 2015
     // 4. Total individual donors
-    $questions[3] = tsLocal('What was the total amount raised from individuals in 2015?');
-    $questions[4] = tsLocal('How many individuals donated in 2015?');
+    $questions[3] = self::tsLocal('What was the total amount raised from individuals in 2015?');
+    $questions[4] = self::tsLocal('How many individuals donated in 2015?');
     $this->runItemQuery($selectContacts . $from . $whereInd, 3, 4);
 
     // 5. What is your retention rate?
-    $questions[5] = tsLocal('What is your retention rate?');
+    $questions[5] = self::tsLocal('What is your retention rate?');
     $selectRetained = "$selectContacts, IF(og2.id IS NULL,0,1) as retained";
     $retainedFrom = "$from
       LEFT JOIN civicrm_contribution c2
@@ -124,20 +124,20 @@ class CRM_Idbsurvey_Form_Report_IDBReport extends CRM_Report_Form {
 
     // 6. Total raised online from individuals
     // 7. Number of people that gave online
-    $questions[6] = tsLocal('How much did you raise online from individuals in 2015?');
-    $questions[7] = tsLocal('How many individuals gave online in 2015?');
+    $questions[6] = self::tsLocal('How much did you raise online from individuals in 2015?');
+    $questions[7] = self::tsLocal('How many individuals gave online in 2015?');
     $this->runItemQuery($selectContacts . $from . $whereOnlineInd, 6, 7);
 
     // 8. How much was given in total through recurring (monthly, quarterly, etc) donations in 2015?
     // 9. How many individuals made recurring donations in 2015?
-    $questions[8] = tsLocal('How much was given in total through recurring (monthly, quarterly, etc) donations in 2015?');
-    $questions[9] = tsLocal('How many individuals made recurring donations in 2015?');
+    $questions[8] = self::tsLocal('How much was given in total through recurring (monthly, quarterly, etc) donations in 2015?');
+    $questions[9] = self::tsLocal('How many individuals made recurring donations in 2015?');
     $this->runItemQuery($selectContacts . $from . $whereRec, 8, 9);
 
     // 10. How much did you raise from individuals giving $1,000 or more (in total) in 2015?
     // 11. How many people made gifts of $1,000 or more (in total) in 2015?
-    $questions[10] = tsLocal('How much did you raise from individuals giving $1,000 or more (in total) in 2015?');
-    $questions[11] = tsLocal('How many individuals made gifts of $1,000 or more (in total) in 2015?');
+    $questions[10] = self::tsLocal('How much did you raise from individuals giving $1,000 or more (in total) in 2015?');
+    $questions[11] = self::tsLocal('How many individuals made gifts of $1,000 or more (in total) in 2015?');
     $groupBy1K = " GROUP BY contribution.contact_id
                    HAVING total_amount_sum >= 1000";
     $query1K = "SELECT SUM(total_amount_sum) as total_amount_sum, COUNT(DISTINCT contact_id) as total_contacts
@@ -145,10 +145,10 @@ class CRM_Idbsurvey_Form_Report_IDBReport extends CRM_Report_Form {
     $this->runItemQuery($query1K, 10, 11);
 
     // 12. Check if memberships are enabled and active
-    $questions[12] = tsLocal('Does your organization offer memberships?');
+    $questions[12] = self::tsLocal('Does your organization offer memberships?');
     $components = CRM_Core_Component::getEnabledComponents();
     if (empty($components['CiviMember'])) {
-      $this->answers[12] = tsLocal('CiviMember is disabled');
+      $this->answers[12] = self::tsLocal('CiviMember is disabled');
     }
     else {
       try {
@@ -157,7 +157,7 @@ class CRM_Idbsurvey_Form_Report_IDBReport extends CRM_Report_Form {
           'context' => "search",
         ));
         if (empty($memberships['values'])) {
-          $this->answers[12] = tsLocal('No memberships');
+          $this->answers[12] = self::tsLocal('No memberships');
         }
         else {
           $this->answers[12] = '<ul><li>' . implode('</li><li>', $memberships['values']) . '</li></ul>';
@@ -169,15 +169,15 @@ class CRM_Idbsurvey_Form_Report_IDBReport extends CRM_Report_Form {
     }
 
     // 14. What was your organization's total income/revenue in 2014?
-    $questions[14] = tsLocal("What was your organization's total income/revenue in 2014?");
+    $questions[14] = self::tsLocal("What was your organization's total income/revenue in 2014?");
     $this->runItemQuery($select . $from . $where2014, 14);
 
     //15.  What was your organization's total income from individual donors in 2015?
-    $questions[15] = tsLocal("What was your organization's total income from individual donors in 2014?");
+    $questions[15] = self::tsLocal("What was your organization's total income from individual donors in 2014?");
     $this->runItemQuery($select . $from . $whereInd2014, 15);
 
     //16.  What was your organization's total income from online donations in 2013?
-    $questions[16] = tsLocal("What was your organization's total income from online donations in 2014?");
+    $questions[16] = self::tsLocal("What was your organization's total income from online donations in 2014?");
     $this->runItemQuery($select . $from . $whereOnlineInd2014, 16);
 
     $this->assign('questions', $questions);
