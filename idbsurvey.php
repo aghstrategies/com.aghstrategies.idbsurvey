@@ -66,7 +66,32 @@ function idbsurvey_civicrm_disable() {
  * @link http://wiki.civicrm.org/confluence/display/CRMDOC/hook_civicrm_upgrade
  */
 function idbsurvey_civicrm_upgrade($op, CRM_Queue_Queue $queue = NULL) {
-  return _idbsurvey_civix_civicrm_upgrade($op, $queue);
+  switch ($op) {
+    case 'check':
+      try {
+        $result = civicrm_api3('ReportTemplate', 'getcount', array(
+          'value' => "com.aghstrategies.idbsurvey/idbreport",
+        ));
+      }
+      catch (CiviCRM_API3_Exception $e) {
+        CRM_Core_Session::setStatus($e->getMessage(), CRM_Idbsurvey_Form_Report_IDBReport::tsLocal('API Error'), 'error');
+      }
+      break;
+
+    case 'enqueue':
+      try {
+        $result = civicrm_api3('ReportTemplate', 'get', array(
+          'value' => "com.aghstrategies.idbsurvey/idbreport",
+          'api.ReportTemplate.create' => array('id' => "\$value.id", 'value' => "contribute/idbreport"),
+        ));
+      }
+      catch (CiviCRM_API3_Exception $e) {
+        CRM_Core_Session::setStatus($e->getMessage(), CRM_Idbsurvey_Form_Report_IDBReport::tsLocal('API Error'), 'error');
+      }
+      break;
+  }
+
+  // return _idbsurvey_civix_civicrm_upgrade($op, $queue);
 }
 
 /**
