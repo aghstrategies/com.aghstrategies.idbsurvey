@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <extension key="com.aghstrategies.idbsurvey" type="module">
   <file>idbsurvey</file>
-  <name>IDB Survey 2016</name>
+  <name>Individual Donor Benchmark Survey 2016</name>
   <description>Provides answers to survey questions about your organization</description>
   <url desc="Main Extension Page">
       https://civicrm.org/extensions/individual-donor-benchmark-survey-report
@@ -16,7 +16,7 @@
     <email>info@aghstrategies.com</email>
   </maintainer>
   <releaseDate>2016-03-07</releaseDate>
-  <version>1.2</version>
+  <version>2.0</version>
   <develStage>stable</develStage>
   <compatibility>
     <ver>4.6</ver>
