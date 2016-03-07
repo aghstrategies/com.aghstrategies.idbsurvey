@@ -26,9 +26,9 @@ function idbsurvey_civicrm_xmlMenu(&$files) {
  * @link http://wiki.civicrm.org/confluence/display/CRMDOC/hook_civicrm_install
  */
 function idbsurvey_civicrm_install() {
-  $message = ts('Congratulations!  You have installed the extension successfully.', array('domain' => 'com.aghstrategies.idbsurvey'));
-  $message .= ' ' . CRM_Utils_System::href(ts('Continue to generate a report.', array('domain' => 'com.aghstrategies.idbsurvey')), 'civicrm/report/com.aghstrategies.idbsurvey/idbreport', 'reset=1');
-  CRM_Core_Session::setStatus($message, ts('Continue to Report', array('domain' => 'com.aghstrategies.idbsurvey')), 'success');
+  $message = array(CRM_Idbsurvey_Form_Report_IDBReport::tsLocal('Now that you have installed the extension, run the report to get your data.'));
+  $message[] = CRM_Utils_System::href(CRM_Idbsurvey_Form_Report_IDBReport::tsLocal('Continue to generate a report.'), 'civicrm/report/contribute/idbreport', 'reset=1');
+  CRM_Core_Session::setStatus(implode(' ', $message), CRM_Idbsurvey_Form_Report_IDBReport::tsLocal('Continue to Report'), 'success');
   return _idbsurvey_civix_civicrm_install();
 }
 
@@ -66,29 +66,18 @@ function idbsurvey_civicrm_disable() {
  * @link http://wiki.civicrm.org/confluence/display/CRMDOC/hook_civicrm_upgrade
  */
 function idbsurvey_civicrm_upgrade($op, CRM_Queue_Queue $queue = NULL) {
-  switch ($op) {
-    case 'check':
-      try {
-        $result = civicrm_api3('ReportTemplate', 'getcount', array(
-          'value' => "com.aghstrategies.idbsurvey/idbreport",
-        ));
-      }
-      catch (CiviCRM_API3_Exception $e) {
-        CRM_Core_Session::setStatus($e->getMessage(), CRM_Idbsurvey_Form_Report_IDBReport::tsLocal('API Error'), 'error');
-      }
-      break;
-
-    case 'enqueue':
-      try {
-        $result = civicrm_api3('ReportTemplate', 'get', array(
-          'value' => "com.aghstrategies.idbsurvey/idbreport",
-          'api.ReportTemplate.create' => array('id' => "\$value.id", 'value' => "contribute/idbreport"),
-        ));
-      }
-      catch (CiviCRM_API3_Exception $e) {
-        CRM_Core_Session::setStatus($e->getMessage(), CRM_Idbsurvey_Form_Report_IDBReport::tsLocal('API Error'), 'error');
-      }
-      break;
+  // Just get rid of old path to report--no need for full upgrader
+  try {
+    $result = civicrm_api3('ReportTemplate', 'get', array(
+      'value' => "com.aghstrategies.idbsurvey/idbreport",
+      'api.ReportTemplate.create' => array(
+        'id' => '$value.id',
+        'value' => 'contribute/idbreport',
+      ),
+    ));
+  }
+  catch (CiviCRM_API3_Exception $e) {
+    CRM_Core_Session::setStatus($e->getMessage(), CRM_Idbsurvey_Form_Report_IDBReport::tsLocal('API Error'), 'error');
   }
 
   // return _idbsurvey_civix_civicrm_upgrade($op, $queue);

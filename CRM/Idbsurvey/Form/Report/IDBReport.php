@@ -9,7 +9,7 @@ class CRM_Idbsurvey_Form_Report_IDBReport extends CRM_Report_Form {
         'dao' => 'CRM_Contribute_DAO_Contribution',
         'filters' => array(
           'financial_type_id' => array(
-            'title' => self::tsLocal('Choose which financial types count as donations'),
+            'title' => self::tsLocal('Financial types considered to be donations'),
             'operatorType' => CRM_Report_Form::OP_MULTISELECT_SEPARATOR,
             'options' => CRM_Contribute_PseudoConstant::financialType(),
             'type' => CRM_Utils_Type::T_INT,
