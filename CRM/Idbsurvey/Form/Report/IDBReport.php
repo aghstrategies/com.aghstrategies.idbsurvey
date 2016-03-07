@@ -52,7 +52,8 @@ class CRM_Idbsurvey_Form_Report_IDBReport extends CRM_Report_Form {
     if (array_key_exists('financial_type_id_value', $this->_submitValues)) {
       $types = implode(", ", $this->_submitValues['financial_type_id_value']);
     }
-    $typesClause = empty($types) ? 'IS NOT NULL' : "IN ({$types})";
+    $incExc = (CRM_Utils_Array::value('financial_type_id_op', $this->_submitValues) == 'mnot') ? 'NOT IN' : 'IN';
+    $typesClause = empty($types) ? 'IS NOT NULL' : "$incExc ({$types})";
     $whereDon = "$where AND contribution.financial_type_id $typesClause";
     $whereDon2014 = "$where2014 AND contribution.financial_type_id $typesClause";
 
