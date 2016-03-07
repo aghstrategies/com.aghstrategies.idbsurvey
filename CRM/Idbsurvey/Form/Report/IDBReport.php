@@ -66,7 +66,7 @@ class CRM_Idbsurvey_Form_Report_IDBReport extends CRM_Report_Form {
       AND contribution.contribution_recur_id IS NULL";
     $whereOnlineInd2014 = "$whereInd2014
       AND contribution.contribution_page_id IS NOT NULL
-      AND contribution.contribution_recur_id IS NOT NULL";
+      AND contribution.contribution_recur_id IS NULL";
 
     // Recurring donations by individuals:
     $whereRec = "$whereInd AND contribution.contribution_recur_id IS NOT NULL";
@@ -114,8 +114,11 @@ class CRM_Idbsurvey_Form_Report_IDBReport extends CRM_Report_Form {
     while ($dao->fetch()) {
       $results[$dao->retained] = $dao->total_contacts;
     }
-    if (empty($results[0]) || empty($results[1])) {
+    if (empty($results[1])) {
       $this->answers[5] = '0%';
+    }
+    elseif (empty($results[0])) {
+      $this->answers[5] = '100%';
     }
     else {
       $pct = 100 * $results[1] / ($results[0] + $results[1]);
@@ -141,7 +144,7 @@ class CRM_Idbsurvey_Form_Report_IDBReport extends CRM_Report_Form {
     $groupBy1K = " GROUP BY contribution.contact_id
                    HAVING total_amount_sum >= 1000";
     $query1K = "SELECT SUM(total_amount_sum) as total_amount_sum, COUNT(DISTINCT contact_id) as total_contacts
-                FROM ($select, contribution.contact_id as contact_id $from $whereInd $groupBy1K)";
+                FROM ($select, contribution.contact_id as contact_id $from $whereInd $groupBy1K) bigdonors";
     $this->runItemQuery($query1K, 10, 11);
 
     // 12. Check if memberships are enabled and active
@@ -160,7 +163,7 @@ class CRM_Idbsurvey_Form_Report_IDBReport extends CRM_Report_Form {
           $this->answers[12] = self::tsLocal('No memberships');
         }
         else {
-          $this->answers[12] = '<ul><li>' . implode('</li><li>', $memberships['values']) . '</li></ul>';
+          $this->answers[12] = self::tsLocal('Yes:') . ' <ul><li>' . implode('</li><li>', $memberships['values']) . '</li></ul>';
         }
       }
       catch (CiviCRM_API3_Exception $e) {
@@ -181,7 +184,7 @@ class CRM_Idbsurvey_Form_Report_IDBReport extends CRM_Report_Form {
     $this->runItemQuery($select . $from . $whereOnlineInd2014, 16);
 
     $this->assign('questions', $questions);
-    $this->assign('questions', $this->answers);
+    $this->assign('answers', $this->answers);
 
     // CRM_Report_Form_Instance::postProcess($this, FALSE);
   }
