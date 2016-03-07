@@ -80,7 +80,35 @@ class CRM_Idbsurvey_Form_Report_IDBReport extends CRM_Report_Form {
     // 4. Total individual donors
     $this->runItemQuery($selectContacts . $from . $whereInd, 'answer3', 'answer4');
 
-    // TODO: New question 5
+    // 5. What is your retention rate?
+    $selectRetained = "$selectContacts, IF(og2.id IS NULL,0,1) as retained";
+    $retainedFrom = "$from
+      LEFT JOIN civicrm_contribution c2
+        ON c2.contact_id = contribution.contact_id
+        AND c2.receive_date >= 20150101000000
+        AND c2.receive_date < 20160101000000
+        AND c2.financial_type_id $typesClause
+      LEFT JOIN civicrm_option_value ov2
+        ON ov2.name = 'Completed'
+        AND ov2.value = c2.contribution_status_id
+      LEFT JOIN civicrm_option_group og2
+        ON og2.name = 'contribution_status'
+        AND og2.id = ov2.option_group_id
+      LEFT JOIN civicrm_financial_type ft2
+        ON c2.financial_type_id = ft2.id";
+
+    $dao = CRM_Core_DAO::executeQuery($selectRetained . $retainedFrom . $whereInd2014 . ' GROUP BY retained');
+    $results = array();
+    while ($dao->fetch()) {
+      $results[$dao->retained] = $dao->total_contacts;
+    }
+    if (empty($results[0]) || empty($results[1])) {
+      $this->assign('answer5', '0%');
+    }
+    else {
+      $pct = 100 * $results[1] / ($results[0] + $results[1]);
+      $this->assign('answer5', "$pct%");
+    }
 
     // 6. Total raised online from individuals
     // 7. Number of people that gave online
