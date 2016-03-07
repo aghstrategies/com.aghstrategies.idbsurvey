@@ -61,8 +61,12 @@ class CRM_Idbsurvey_Form_Report_IDBReport extends CRM_Report_Form {
     $whereInd2014 = "$whereDon2014 AND ( cc.contact_type in ('Individual', 'Household') )";
 
     // Online donations by individuals:
-    $whereOnlineInd = "$whereInd AND contribution.contribution_page_id IS NOT NULL";
-    $whereOnlineInd2014 = "$whereInd2014 AND contribution.contribution_page_id IS NOT NULL";
+    $whereOnlineInd = "$whereInd
+      AND contribution.contribution_page_id IS NOT NULL
+      AND contribution.contribution_recur_id IS NULL";
+    $whereOnlineInd2014 = "$whereInd2014
+      AND contribution.contribution_page_id IS NOT NULL
+      AND contribution.contribution_recur_id IS NOT NULL";
 
     // Recurring donations by individuals:
     $whereRec = "$whereInd AND contribution.contribution_recur_id IS NOT NULL";
@@ -122,14 +126,13 @@ class CRM_Idbsurvey_Form_Report_IDBReport extends CRM_Report_Form {
     // 7. Number of people that gave online
     $questions[6] = tsLocal('How much did you raise online from individuals in 2015?');
     $questions[7] = tsLocal('How many individuals gave online in 2015?');
-    // TODO: fix recurring!
     $this->runItemQuery($selectContacts . $from . $whereOnlineInd, 6, 7);
 
     // 8. How much was given in total through recurring (monthly, quarterly, etc) donations in 2015?
     // 9. How many individuals made recurring donations in 2015?
     $questions[8] = tsLocal('How much was given in total through recurring (monthly, quarterly, etc) donations in 2015?');
     $questions[9] = tsLocal('How many individuals made recurring donations in 2015?');
-    $this->runItemQuery($selectContacts . $from . $whereOnlineInd, 8, 9);
+    $this->runItemQuery($selectContacts . $from . $whereRec, 8, 9);
 
     // 10. How much did you raise from individuals giving $1,000 or more (in total) in 2015?
     // 11. How many people made gifts of $1,000 or more (in total) in 2015?
