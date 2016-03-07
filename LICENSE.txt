@@ -1,5 +1,5 @@
 Package: com.aghstrategies.idbsurvey
-Copyright (C) 2015, Tyrell Cook <tyrell@aghstrategies.com>
+Copyright (C) 2015-16, AGH Strategies <info@aghstrategies.com>
 Licensed under the GNU Affero Public License 3.0 (below).
 
 -------------------------------------------------------------------------------
