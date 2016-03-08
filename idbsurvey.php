@@ -26,9 +26,9 @@ function idbsurvey_civicrm_xmlMenu(&$files) {
  * @link http://wiki.civicrm.org/confluence/display/CRMDOC/hook_civicrm_install
  */
 function idbsurvey_civicrm_install() {
-  $message = array(CRM_Idbsurvey_Form_Report_IDBReport::tsLocal('Now that you have installed the extension, run the report to get your data.'));
-  $message[] = CRM_Utils_System::href(CRM_Idbsurvey_Form_Report_IDBReport::tsLocal('Continue to generate a report.'), 'civicrm/report/contribute/idbreport', 'reset=1');
-  CRM_Core_Session::setStatus(implode(' ', $message), CRM_Idbsurvey_Form_Report_IDBReport::tsLocal('Continue to Report'), 'success');
+  $message = array(ts('Now that you have installed the extension, run the report to get your data.', array('domain' => 'com.aghstrategies.idbsurvey')));
+  $message[] = CRM_Utils_System::href(ts('Continue to generate a report.', array('domain' => 'com.aghstrategies.idbsurvey')), 'civicrm/report/contribute/idbreport', 'reset=1');
+  CRM_Core_Session::setStatus(implode(' ', $message), ts('Continue to Report', array('domain' => 'com.aghstrategies.idbsurvey')), 'success');
   return _idbsurvey_civix_civicrm_install();
 }
 
@@ -77,7 +77,7 @@ function idbsurvey_civicrm_upgrade($op, CRM_Queue_Queue $queue = NULL) {
     ));
   }
   catch (CiviCRM_API3_Exception $e) {
-    CRM_Core_Session::setStatus($e->getMessage(), CRM_Idbsurvey_Form_Report_IDBReport::tsLocal('API Error'), 'error');
+    CRM_Core_Session::setStatus($e->getMessage(), ts('API Error', array('domain' => 'com.aghstrategies.idbsurvey')), 'error');
   }
 
   // return _idbsurvey_civix_civicrm_upgrade($op, $queue);
