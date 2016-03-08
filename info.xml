@@ -2,14 +2,12 @@
 <extension key="com.aghstrategies.idbsurvey" type="module">
   <file>idbsurvey</file>
   <name>Individual Donor Benchmark Survey 2016</name>
-  <description>Provides answers to survey questions about your organization</description>
-  <url desc="Main Extension Page">
-      https://civicrm.org/extensions/individual-donor-benchmark-survey-report
-  </url>
-  <url desc="Documentation">
-    https://civicrm.org/extensions/individual-donor-benchmark-survey-report
-  </url>
-  <url desc="Licensing">http://civicrm.org/licensing</url>
+  <description>Calculates donor data to compare to other nonprofits in the Individual Donor Benchmark Survey.</description>
+  <urls>
+    <url desc="Main Extension Page">https://civicrm.org/extensions/individual-donor-benchmark-survey-report</url>
+    <url desc="Documentation">https://civicrm.org/extensions/individual-donor-benchmark-survey-report</url>
+    <url desc="Licensing">http://www.gnu.org/licenses/agpl-3.0.html</url>
+  </urls>
   <license>AGPL-3.0</license>
   <maintainer>
     <author>AGH Strategies</author>
@@ -22,12 +20,6 @@
     <ver>4.6</ver>
     <ver>4.7</ver>
   </compatibility>
-  <comments>
-    This extension creates a report template that can be used to fill out the Individual Donor Benchmark Survey Report (http://www.thirdspacestudio.com/idbproject/).
-    Once the extension is installed there will be a report template call idbsurvey.
-    You can get there by going to  "civicrm/report/com.aghstrategies.idbsurvey/idbreport" or by creating a new contribution report instance and selecting "idbsurvey".
-    Once there you will need to use the filter to choose which financial types will be counted as donations for the report. Then click "Preview Report" and you will see the answers for the report.
-   </comments>
   <civix>
     <namespace>CRM/Idbsurvey</namespace>
   </civix>
