@@ -20,11 +20,29 @@ class CRM_Idbsurvey_Form_Report_IDBReport extends CRM_Report_Form {
     parent::__construct();
   }
 
-  public function preProcess() {
-    $this->assign('reportTitle', self::tsLocal('Individual Donor Benchmark Survey Report'));
-    parent::preProcess();
-  }
+  /**
+   * Build the Title and Format tab without adding buttons.
+   */
+  public function buildInstanceAndButtons() {
+    CRM_Report_Form_Instance::buildForm($this);
 
+    $label = $this->_id ? ts('Update Report') : ts('Create Report');
+    $this->addElement('submit', $this->_instanceButtonName, $label);
+
+    if ($this->_id) {
+      $this->addElement('submit', $this->_createNewButtonName,
+        ts('Save a Copy') . '...');
+    }
+    $this->assign('instanceForm', $this->_instanceForm);
+
+    $this->addButtons(array(
+        array(
+          'type' => 'submit',
+          'name' => self::tsLocal('Display Answers for the Survey'),
+          'isDefault' => TRUE,
+        ),
+    ));
+  }
 
   public function postProcess() {
     $this->beginPostProcess();
