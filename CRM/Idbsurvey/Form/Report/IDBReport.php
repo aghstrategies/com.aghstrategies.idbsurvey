@@ -27,6 +27,8 @@ class CRM_Idbsurvey_Form_Report_IDBReport extends CRM_Report_Form {
 
 
   public function postProcess() {
+    $this->beginPostProcess();
+
     /* Basic queries to be built upon */
 
     $select = "SELECT COUNT(contribution.total_amount) as total_amount_count,
