@@ -1,6 +1,8 @@
 <?php
 
 class CRM_Idbsurvey_Form_Report_IDBReport extends CRM_Report_Form {
+  protected $_noFields = TRUE;
+
   public $answers = array();
 
   public function __construct() {
