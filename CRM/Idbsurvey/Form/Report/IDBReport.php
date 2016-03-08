@@ -145,6 +145,7 @@ class CRM_Idbsurvey_Form_Report_IDBReport extends CRM_Report_Form {
     }
     else {
       $pct = 100 * $results[1] / ($results[0] + $results[1]);
+      $pct = round($pct, 2);
       $this->answers[5] = "$pct%";
     }
 
