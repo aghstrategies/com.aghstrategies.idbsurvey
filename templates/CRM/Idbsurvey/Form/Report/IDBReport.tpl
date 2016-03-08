@@ -34,8 +34,6 @@
       </tbody>
     </table>
     {/if}
-
-    {include file="CRM/Report/Form/ErrorMessage.tpl"}
   </div>
   {literal}
   <script type="text/javascript">
