@@ -84,6 +84,78 @@ function idbsurvey_civicrm_upgrade($op, CRM_Queue_Queue $queue = NULL) {
 }
 
 /**
+ * Implements hook_civicrm_navigationMenu().
+ *
+ * @link http://wiki.civicrm.org/confluence/display/CRMDOC/hook_civicrm_navigationMenu
+ */
+function idbsurvey_civicrm_navigationMenu(&$menu) {
+  // We'd like the item to be beneath these two items.
+  $idealTree = array(
+    'Contributions',
+  );
+  // Walk down the menu to see if we can find them where we expect them.
+  $walkMenu = $menu;
+  $branches = array();
+  foreach ($idealTree as $limb) {
+    foreach ($walkMenu as $id => $item) {
+      if ($item['attributes']['name'] == $limb) {
+        $walkMenu = CRM_Utils_Array::value('child', $item, array());
+        $branches[] = $id;
+        $branches[] = 'child';
+        continue 2;
+      }
+    }
+    // If the expected parent isn't at this level of the menu, we'll just drop
+    // it here.
+    break;
+  }
+  $item = array(
+    'attributes' => array(
+      'label' => ts('Individual Donor Benchmark Survey', array('domain' => 'com.aghstrategies.idbsurvey')),
+      'name' => 'idbsurvey_report',
+      'url' => 'civicrm/report/contribute/idbreport?reset=1',
+      'permission' => 'access Report Criteria',
+      'operator' => 'AND',
+      'separator' => 0,
+      'active' => 1,
+    ),
+  );
+  if (!empty($id)) {
+    $item['parentID'] = $id;
+  }
+  // Need to put together exactly where the item should be added;
+  $treeMenu = &$menu;
+  foreach ($branches as $branch) {
+    $treeMenu = &$treeMenu[$branch];
+  }
+  $newId = 0;
+  idbsurvey_scanMaxNavId($menu, $newId);
+  $newId++;
+  $item['navID'] = $newId;
+  $treeMenu[$newId] = $item;
+}
+
+/**
+ * Scans recursively for the highest ID in the navigation.
+ *
+ * Better than searching the database because other extensions may have added
+ * items in the meantime.
+ *
+ * @param array $menu
+ *   The menu to scan.
+ * @param int &$max
+ *   The maximum found so far.
+ */
+function idbsurvey_scanMaxNavId($menu, &$max) {
+  foreach ($menu as $id => $item) {
+    $max = max($id, $max);
+    if (!empty($item['child'])) {
+      idbsurvey_scanMaxNavId($item['child'], $max);
+    }
+  }
+}
+
+/**
  * Implements hook_civicrm_managed().
  *
  * Generate a list of entities to create/deactivate/delete when this module
