@@ -10,7 +10,7 @@
     <p>{ts domain='com.aghstrategies.idbsurvey' 1='https://aghstrategies.com/'}While there are some subjective questions on the survey and some questions about expenses and staffing&mdash;information that isn&rsquo;t typically stored in CiviCRM&mdash;<a href="%1" target="_blank">AGH Strategies</a> developed this report to quickly calculate the answers to the questions about fundraising results.{/ts}</p>
     <h3><i class="crm-i fa-wrench"></i> {ts domain='com.aghstrategies.idbsurvey'}Configure this report{/ts}</h3>
     <p>{ts domain='com.aghstrategies.idbsurvey'}The only thing the system can&rsquo;t automatically know is what financial types you consider to be &ldquo;donations&rdquo; as opposed to service fees or other revenue.  In the form above, <strong>select the financial types you want to count for the survey, and click &ldquo;Display Answers for the Survey&rdquo;</strong>.{/ts}</p>
-    <p>{ts domain='com.aghstrategies.idbsurvey' 1=https://www.thirdspacestudio.com/idbsurvey/}The survey form is at <a href="%1" target="_blank">%1</a>, and the question numbers here correspond to those on the &ldquo;Your Results&rdquo; section.{/ts}</p>
+    <p>{ts domain='com.aghstrategies.idbsurvey' 1=https://www.thirdspacestudio.com/countmein}The survey form is at <a href="%1" target="_blank">%1</a>.{/ts}</p>
   </div>
 
   {if $criteriaForm OR $instanceForm OR $instanceFormError}

@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <extension key="com.aghstrategies.idbsurvey" type="module">
   <file>idbsurvey</file>
-  <name>Individual Donor Benchmark Survey 2017</name>
+  <name>Individual Donor Benchmark Survey</name>
   <description>Calculates donor data to compare to other nonprofits in the Individual Donor Benchmark Survey.</description>
   <urls>
     <url desc="Main Extension Page">https://civicrm.org/extensions/individual-donor-benchmark-survey-report</url>
