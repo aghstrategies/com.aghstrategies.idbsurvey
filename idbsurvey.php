@@ -67,7 +67,7 @@ function idbsurvey_civicrm_upgrade($op, CRM_Queue_Queue $queue = NULL) {
       ),
     ));
   }
-  catch (CiviCRM_API3_Exception $e) {
+  catch (CRM_Core_Exception $e) {
     CRM_Core_Session::setStatus($e->getMessage(), ts('API Error', array('domain' => 'com.aghstrategies.idbsurvey')), 'error');
   }
 

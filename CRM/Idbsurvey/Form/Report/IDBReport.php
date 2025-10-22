@@ -188,7 +188,7 @@ class CRM_Idbsurvey_Form_Report_IDBReport extends CRM_Report_Form {
           $this->answers[10] = self::tsLocal('Yes:') . ' <ul><li>' . implode('</li><li>', $memberships['values']) . '</li></ul>';
         }
       }
-      catch (CiviCRM_API3_Exception $e) {
+      catch (CRM_Core_Exception $e) {
         $this->answers[10] = 'API Error: ' . $e->getMessage();
       }
     }
