@@ -1,3 +1,8 @@
+# Unsupported
+The Individual Donor Benchmark project has not updated since 2016 and "is not currently active": https://www.thirdspacestudio.com/idbproject/.
+As a result, this extension is not very useful and will be archived.
+
+## Former README
 This extension creates a report template that can be used to fill out the Individual Donor Benchmark Survey Report (http://www.thirdspacestudio.com/idbproject/).
 Once the extension is installed there will be a report template call idbsurvey.
 You can get there by going to  "civicrm/report/com.aghstrategies.idbsurvey/idbreport" or by creating a new contribution report instance and selecting "idbsurvey".
